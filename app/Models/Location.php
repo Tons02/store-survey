@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Department;
+use App\Filters\LocationFilter;
+use Essa\APIToolKit\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Location extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
     protected $fillable = [
         'sync_id',
         'code',
@@ -25,6 +27,8 @@ class Location extends Model
         "updated_at", 
         "deleted_at"
     ];
+
+    protected string $default_filters = LocationFilter::class;
 
     public function department()
     {

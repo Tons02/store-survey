@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Filters\RoleManagementFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\softDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Essa\APIToolKit\Filters\Filterable;
 
 class RoleManagement extends Model
 {
-    use HasFactory, softDeletes;
+    use HasFactory, softDeletes, Filterable;
     protected $fillable = [
         'id',
         'name',
@@ -21,6 +23,8 @@ class RoleManagement extends Model
         "updated_at", 
         "deleted_at"
     ];
+
+    protected string $default_filters = RoleManagementFilter::class;
 
     protected $casts = [
         'access_permission' => 'json',

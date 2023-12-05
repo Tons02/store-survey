@@ -8,34 +8,32 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 
+use App\Functions\GlobalFunction;
+use App\Response\Message;
+
+use Essa\APIToolKit\Api\ApiResponse;
+
 class CompaniesController extends Controller
 {
-    public function index(Request $request){
-        $search = $request->query('search');
-        $status = $request->query('status');
-        $per_page = $request->query('per_page', 10);
-        
-        switch ($status) {
-            case "active":
-            case null:
-            default:
-                $status = 1;
-                break;
-            case "deactivated":
-                $status = 0;
-                break;
-        }
-        
-         $companies = Companies::where('is_active', $status)
-        ->where(function ($query) use ($search) {
-            $query->where('code', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%");
-        })
-        ->orderBy('created_at', 'DESC')
-        ->paginate($per_page);
+    use ApiResponse;
 
+    public function index(Request $request){
+        $status = $request->query('status');
+
+        $companies = Companies::
+        when($status === "inactive", function ($query) {
+            $query->onlyTrashed();
+        })
+        ->useFilters()
+        ->dynamicPaginate();
+        
+        $is_empty = $companies->isEmpty();
+
+        if ($is_empty) {
+            return GlobalFunction::not_found(Message::NOT_FOUND);
+        }
         CompanyResource::collection($companies);
-        return $companies;
+        return GlobalFunction::response_function(Message::COMPANY_DISPLAY, $companies);
     }
 
     public function sync_companies(Request $request) {

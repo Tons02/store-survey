@@ -6,16 +6,18 @@ namespace App\Models;
 use App\Models\Location;
 use App\Models\Companies;
 use App\Models\Department;
+use App\Filters\UserFilter;
 use App\Models\RoleManagement;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\softDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Essa\APIToolKit\Filters\Filterable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, softDeletes;
+    use HasApiTokens, HasFactory, Notifiable, softDeletes, Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -50,6 +52,8 @@ class User extends Authenticatable
         "updated_at", 
         "deleted_at"
     ];
+
+    protected string $default_filters = UserFilter::class;
 
 
     /**

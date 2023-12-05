@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Filters\CompaniesFilter;
+use Essa\APIToolKit\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Companies extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
     protected $fillable = [
         'sync_id',
         'code',
@@ -20,6 +22,8 @@ class Companies extends Model
         "updated_at", 
         "deleted_at"
     ];
+
+    protected string $default_filters = CompaniesFilter::class;
 
     protected $casts = [
         'is_active' => 'boolean'

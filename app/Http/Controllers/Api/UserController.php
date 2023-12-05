@@ -8,36 +8,39 @@ use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 
+use App\Functions\GlobalFunction;
+use App\Response\Message;
+  
+use Essa\APIToolKit\Api\ApiResponse;
+
+
 class UserController extends Controller
 {
+    use ApiResponse;
+
     public function index(Request $request){
-        $search = $request->query('search');
-        $status = $request->query('status');
-        $per_page = $request->query('per_page', 10);
-
-        $status = $request->query('status') === 'deactivated' ? 0 : 1;
-        $searchableFields = ['id_prefix', 'id_no', 'first_name', 'middle_name', 'last_name', 'location_id', 'department_id', 'company_id'];
-
-        $users = User::with('location', 'department', 'companies', 'role')->withTrashed()
-        ->where('is_active', $status)
-        ->where(function ($query) use ($searchableFields, $search) {
-            foreach ($searchableFields as $field) {
-                $query->orWhere($field, 'LIKE', "%{$search}%");
-            }
-        })
-        ->orderBy('created_at', 'DESC')
-        ->paginate($per_page);
-
-        $users = UserResource::collection($users);
         
-        return response()->json([
-            'status_code' => "200",
-            'message' => "Data",
-            'result' => $users
-            ], 200);
+        $status = $request->query('status');
+
+        $users = User::with('location', 'department', 'companies', 'role')
+        ->when($status === "inactive", function ($query) {
+            $query->onlyTrashed();
+        })
+        ->UseFilters()
+        ->dynamicPaginate();
+        
+        $is_empty = $users->isEmpty();
+        
+
+        if ($is_empty) {
+            return GlobalFunction::not_found(Message::NOT_FOUND);
+        }
+            UserResource::collection($users);
+            return GlobalFunction::response_function(Message::USER_DISPLAY, $users);
     }
 
     public function store(UserRequest $request){
+
         $create_user = User::create([
             
             "id_prefix" => $request["personal_info"]["id_prefix"],
@@ -57,32 +60,29 @@ class UserController extends Controller
             "is_active" => 1
 
         ]);
-        return response()->json([
-            'status_code' => "200",
-            'message' => "User Created Successfully"
-            ], 200);
+
+        return GlobalFunction::save(Message::USER_SAVE, $create_user);
             
     }
     
 
     public function update(UserRequest $request, $id) {
-        $users = User::with("role")->find($id);
 
-        if (!$users) {
+        $userID = User::with("role")->find($id);
+
+        if (!$userID) {
             return response()->json([
                 'status_code' => "404",
                 'message' => "User not found"
                 ], 404);
         }
 
-        $users->update([
+        $userID->update([
             "username" => $request["username"],
             "role_id" => $request["role_id"]
         ]);
-        return response()->json([
-            'status_code' => '200',
-            'message' => 'Users Updated Successfully'
-            ], 200);
+       
+        return GlobalFunction::response_function(Message::USER_UPDATE, $userID);
     }
 
 
@@ -91,33 +91,32 @@ class UserController extends Controller
     }
 
     public function archived(Request $request, $id){
-        $user = User::withTrashed()->find($id);
-    
-        if (!$user) {
-            return response()->json([
-                'status_code' => "404",
-                'message' => "User not found"
-                ], 404);
+        $invalid_id = User::where("id", $id)
+            ->withTrashed()
+            ->get();
+
+        if ($invalid_id->isEmpty()) {
+            return GlobalFunction::not_found(Message::NOT_FOUND);
         }
-    
-        if (!$user->deleted_at) {
+        $user = User::withTrashed()->find($id);
+        $is_active = User::withTrashed()
+            ->where("id", $id)
+            ->first();
+        if (!$is_active) {
+            return $is_active;
+        } elseif (!$is_active->deleted_at) {
             $user->update([
                 'is_active' => 0
             ]);
             $user->delete();
-            return response()->json([
-                'status_code' => "200",
-                'message' => "User Archived Successfully"
-                ], 200);
+            return GlobalFunction::response_function(Message::ARCHIVE_STATUS);
         } else {
             $user->update([
                 'is_active' => 1
             ]);
             $user->restore();
-            return response()->json([
-                'status_code' => "200",
-                'message' => "User Restore Successfully"
-                ], 200);
+            return GlobalFunction::response_function(Message::RESTORE_STATUS);
         }
+
     }
 }

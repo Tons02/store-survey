@@ -8,39 +8,34 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LocationResource;
 
+use App\Functions\GlobalFunction;
+use App\Response\Message;
+
+use Essa\APIToolKit\Api\ApiResponse;
+
 class LocationController extends Controller
 {
+    use ApiResponse;
+
     public function index(Request $request)
     {
-        $search = $request->query('search');
         $status = $request->query('status');
-        $per_page = $request->query('per_page', 10);
-    
-        switch ($status) {
-            case "active":
-            case null:
-            default:
-                $status = 1;
-                break;
-            case "deactivated":
-                $status = 0;
-                break;
-        }
-        $location = Location::with('department')->where('is_active', $status)
-        ->where(function ($query) use ($search) {
-            $query->where('code', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%");
+
+        $location = Location::with('department')
+        ->when($status === "inactive", function ($query) {
+            $query->onlyTrashed();
         })
-        ->orderBy('created_at', 'DESC')
-        ->paginate($per_page);
+        ->UseFilters()
+        ->dynamicPaginate();
         
-        $location = LocationResource::collection($location);
+        $is_empty = $location->isEmpty();
         
-        return response()->json([
-            'status_code' => "200",
-            'message' => "Display all locations",
-            'result' => $location
-            ], 200);
+
+        if ($is_empty) {
+            return GlobalFunction::not_found(Message::NOT_FOUND);
+        }
+            LocationResource::collection($location);
+            return $this->responseSuccess('Location Display Successfully', $location);
 
     }
     
