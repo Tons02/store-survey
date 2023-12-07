@@ -17,8 +17,12 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'access_permission' => $this->access_permission,
+            'access_permission' => explode(',', $this->access_permission),
             'is_active' => $this->is_active
         ];
     }
+
+   
+    
+
 }

@@ -31,11 +31,17 @@ class Message
     const DEPARTMENT_SAVE = "Department Sync successfully.";
     const DEPARTMENT_DISPLAY = "Department display successfully.";
 
+    //ENGAGEMENT FORMS
+    const STORE_SAVE = "Engagement form successfully save.";
+    const STORE_UPDATE = "Engagement form updated successfully";
+    const STORE_DISPLAY = "Engagement form display successfully";
+
     //GLOBAL MESSAGE
     const NOT_FOUND = "Data not Found";
     const INVALID_ACTION = "Invalid action.";
     const ARCHIVE_STATUS = "Successfully archived.";
     const RESTORE_STATUS = "Successfully restore.";
     const LOGOUT_USER = "Logout Successfully";
+    
 
 }

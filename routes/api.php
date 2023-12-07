@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\RoleManagementController;
+use App\Http\Controllers\Api\StoreEngagementFormsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,11 @@ Route::post('sync_department',[DepartmentController::class,'sync_department']);
 
 Route::resource("location", LocationController::class);
 Route::post('sync_location',[LocationController::class,'sync_location']);
+
+//Store Engagment Form 
+Route::resource("seforms", StoreEngagementFormsController::class);
+Route::post('seforms-followup/{id}',[StoreEngagementFormsController::class,'followup']);
+Route::put('seforms-archived/{id}',[StoreEngagementFormsController::class,'archived']);
 
 });
 

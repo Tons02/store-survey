@@ -22,7 +22,7 @@ class RoleManagementController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
-
+        
         $RoleManagement = RoleManagement::
         when($status === "inactive", function ($query) {
             $query->onlyTrashed();
