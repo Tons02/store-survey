@@ -22,25 +22,25 @@ class StoreEngagementFormRequest extends FormRequest
     public function rules(): array
 {
     return [
-        "visit_number" => [
-            "sometimes|required",
+        "id" => [
+            "sometimes:required",
             "string",
-            $this->route()->storeengagementforms
-                ? "unique:store_engagement_forms,visit_number," . $this->route()->storeengagementforms
-                : "unique:store_engagement_forms,visit_number",
+            $this->route()->storeengagementform
+                ? "unique:store_engagement_forms,id," . $this->route()->storeengagementform
+                : "unique:store_engagement_forms,id",
         ],
-        "name" => "sometimes|required",
-        "contact" => "sometimes|required",
-        "store_name" => "sometimes|required",
-        "leader" => "sometimes|required",
-        "date" => "sometimes|required",
-        "objectives" => "sometimes|required",
-        "strategies" => "sometimes|required",
-        "activities" => "sometimes|required",
-        "findings" => "sometimes|required",
-        "notes" => "sometimes|required",
-        "e_signature" => "sometimes|required",
+        "name" => "sometimes:required",
+        "contact" => ["sometimes", "required", "regex:/^\+639\d{9}$/"],
+        "store_name" => "sometimes:required",
+        "leader" => "sometimes:required",
+        "objectives" => "sometimes:required",
+        "strategies" => "sometimes:required",
+        "activities" => "sometimes:required",
+        "findings" => "sometimes:required",
+        "notes" => "sometimes:required",
+        "e_signature" => "sometimes:required",
     ];
+    
 }
 
 }

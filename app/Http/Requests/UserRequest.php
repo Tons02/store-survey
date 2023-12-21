@@ -36,11 +36,10 @@ class UserRequest extends FormRequest
                 "required",
                 "unique:users,username",
             ],
-            "password" => "required",
-            "location_id" => "required",
-            "department_id" => "required",
-            "company_id" => "required",
-            "role_id" => "required"
+            "location_id" => "required|exists:locations,sync_id",
+            "department_id" => "required|exists:departments,sync_id",
+            "company_id" => "required|exists:companies,sync_id",
+            "role_id" => "required|exists:role_management,id"
         ];
     
         // Validation rules for "update" scenario
@@ -49,7 +48,7 @@ class UserRequest extends FormRequest
                 "required",
                 "unique:users,username," . $this->route()->user,
             ],
-            "role_id" => "required"
+            "role_id" => "required|exists:role_management,id"
         ];
     
         // Return the appropriate rules based on the scenario

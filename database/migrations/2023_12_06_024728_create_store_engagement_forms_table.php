@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('store_engagement_forms', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('visit_number');
             $table->string('name');
             $table->string('contact');
             $table->string('store_name');
             $table->string('leader');
-            $table->string('date');
             $table->json('objectives');
             $table->json('strategies');
             $table->json('activities');

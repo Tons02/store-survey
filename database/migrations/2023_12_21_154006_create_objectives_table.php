@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locations', function (Blueprint $table) {
+        Schema::create('objectives', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('sync_id')->unique();
-            $table->string('code')->index();
-            $table->string('name');
+            $table->string('objective');
+            $table->unsignedInteger('location_id');
             $table->boolean('is_active');
             $table->timestamps();
             $table->softDeletes();
+        
+            $table->foreign('location_id')->references('sync_id')->on('locations')->onDelete('cascade');
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('location');
+        Schema::dropIfExists('objectives');
     }
 };

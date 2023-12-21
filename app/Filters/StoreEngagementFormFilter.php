@@ -7,12 +7,11 @@ use Essa\APIToolKit\Filters\QueryFilters;
 class StoreEngagementFormFilter extends QueryFilters
 {
     protected array $allowedFilters = [
-        "visit_number",
+        "id",
         "name",
         "contact",
         "store_name",
         "leader",
-        "date",
         "objectives",
         "strategies",
         "activities",
@@ -20,17 +19,17 @@ class StoreEngagementFormFilter extends QueryFilters
         "notes",
         "is_update",
         "is_active",
+        "created_at",
     ];
     
     protected array $allowedSorts = ["updated_at"];
 
     protected array $columnSearch = [
-        "visit_number",
+        "id",
         "name",
         "contact",
         "store_name",
         "leader",
-        "date",
         "objectives",
         "strategies",
         "activities",
@@ -38,6 +37,7 @@ class StoreEngagementFormFilter extends QueryFilters
         "notes",
         "is_update",
         "is_active",
+        "created_at",
     ];
 
     public function from($from)

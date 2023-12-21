@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Response\Message;
 use Illuminate\Http\Request;
 use App\Functions\GlobalFunction;
-use Illuminate\Support\Facades\Validator;
-
-
 use App\Models\StoreEngagementForm;
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
+
+use App\Http\Controllers\Controller;
 use Essa\APIToolKit\Api\ApiResponse;
+
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreEngagementFormRequest;
+use App\Http\Resources\StoreEngagementFormResource;
 
 class StoreEngagementFormsController extends Controller
 {
@@ -34,10 +36,10 @@ class StoreEngagementFormsController extends Controller
         if ($is_empty) {
             return GlobalFunction::not_found(Message::NOT_FOUND);
         }
-            // RoleResource::collection($StoreEngagementForm);
+            StoreEngagementFormResource::collection($StoreEngagementForm);
             return GlobalFunction::response_function(Message::STORE_DISPLAY, $StoreEngagementForm);
     }
-    // ["admin", "Manager"]
+    
     public function store(StoreEngagementFormRequest $request){
         
         $objectives = $request->objectives;
@@ -84,19 +86,22 @@ class StoreEngagementFormsController extends Controller
             "is_active" => 1,
         ]);
 
-        return GlobalFunction::response_function(Message::STORE_SAVE, $createform);
+        // StoreEngagementFormResource::collection($createform);
+        return GlobalFunction::response_function(Message::STORE_SAVE);
     }  
 
     public function followup(StoreEngagementFormRequest $request, $id){
-        
-
-
         $StoreEngagementForm = StoreEngagementForm::find($id);
-
+    
         if (!$StoreEngagementForm) {
             return GlobalFunction::not_found(Message::NOT_FOUND);
         }
-
+    
+            // Check if is_update is already 1, if yes, return a response indicating that the update is not allowed.
+        if ($StoreEngagementForm->is_update == 1) {
+            return GlobalFunction::invalid('Update not allowed. The form is already marked as updated.');
+        }
+    
         $findings = $request->findings;
         $findingsArray = json_decode($findings, true);
         
@@ -122,10 +127,10 @@ class StoreEngagementFormsController extends Controller
             "e_signature" => $location,
             "is_update" => 1,
         ]);
-
-        return GlobalFunction::response_function(Message::STORE_UPDATE, $StoreEngagementForm);
-        
+    
+        return GlobalFunction::response_function(Message::STORE_UPDATE);
     }
+    
 
     public function archived(Request $request, $id){
         $StoreEngagementForm = StoreEngagementForm::withTrashed()->find($id);

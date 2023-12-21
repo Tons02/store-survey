@@ -36,7 +36,14 @@ class Message
     const STORE_UPDATE = "Engagement form updated successfully";
     const STORE_DISPLAY = "Engagement form display successfully";
 
+    //OBJECTIVES OPERATIONS
+    const OBJECTIVE_SAVE = "Objective successfully save.";
+    const OBJECTIVE_UPDATE = "Objective successfully updated.";
+    const OBJECTIVE_DISPLAY = "Objective display successfully.";
+
     //GLOBAL MESSAGE
+    const INVALID_STATUS = "Invalid Status";
+    const INVALID_ID = "Invalid ID";
     const NOT_FOUND = "Data not Found";
     const INVALID_ACTION = "Invalid action.";
     const ARCHIVE_STATUS = "Successfully archived.";

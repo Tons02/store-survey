@@ -35,7 +35,7 @@ class UserController extends Controller
         if ($is_empty) {
             return GlobalFunction::not_found(Message::NOT_FOUND);
         }
-            UserResource::collection($users);
+            UserResource::collection($users); 
             return GlobalFunction::response_function(Message::USER_DISPLAY, $users);
     }
 
@@ -51,7 +51,7 @@ class UserController extends Controller
             "sex" => $request["personal_info"]["sex"],
 
             "username" => $request["username"],
-            "password" => $request["password"],
+            "password" => $request["username"],
 
             "location_id" => $request["location_id"],
             "department_id" => $request["department_id"],
@@ -61,8 +61,8 @@ class UserController extends Controller
 
         ]);
 
-        return GlobalFunction::save(Message::USER_SAVE, $create_user);
-            
+            return GlobalFunction::save(Message::USER_SAVE, $create_user);
+        
     }
     
 
@@ -91,6 +91,12 @@ class UserController extends Controller
     }
 
     public function archived(Request $request, $id){
+        
+        $auth_id = auth('sanctum')->user()->id;
+        if($id == $auth_id){
+            return response()->json(['message' => 'Unable to Archive, User already in used!'],409);
+        }
+
         $invalid_id = User::where("id", $id)
             ->withTrashed()
             ->get();
@@ -119,4 +125,5 @@ class UserController extends Controller
         }
 
     }
+
 }

@@ -4,40 +4,25 @@ namespace App\Filters;
 
 use Essa\APIToolKit\Filters\QueryFilters;
 
-class UserFilter extends QueryFilters
+class ObjectiveFilter extends QueryFilters
 {
     protected array $allowedFilters = [
-        "id_prefix",
-        "id_no",
-        "first_name",
-        "middle_name",
-        "last_name",
-        "sex",
-        "username",
+        "id",
+        "objective",
         "location_id",
-        "department_id",
-        "company_id",
         "created_at", 
     ];
     protected array $allowedSorts = ["updated_at"];
 
     protected array $relationSearch = [
-        'location' => ['name'],
-        'department' => ['name'],
-        'companies' => ['name']
+        'location' => ['name']
     ];
 
     protected array $columnSearch = [
-        "id_prefix",
-        "id_no",
-        "first_name",
-        "middle_name",
-        "last_name",
-        "sex",
-        "username",
+        "id",
+        "objective",
         "location_id",
-        "department_id",
-        "company_id",
+        "created_at", 
     ];
     public function from($from)
     {
@@ -48,4 +33,3 @@ class UserFilter extends QueryFilters
         $this->builder->whereDate("updated_at", "<=", $to);
     }
 }
-    

@@ -12,13 +12,15 @@ class StoreEngagementForm extends Model
 {
     use HasFactory, softDeletes, Filterable;
 
+    // protected $dateFormat = 'g:ia F d, Y';
+
+
     protected $fillable = [
-        'visit_number',
+        'id',
         'name',
         'contact',
         'store_name',
         'leader',
-        'date',
         'objectives',
         'strategies',
         'activities',
@@ -26,7 +28,8 @@ class StoreEngagementForm extends Model
         'notes',
         'e_signature',
         'is_update',
-        'is_active'
+        'is_active',
+        'created_at',
     ];
 
     protected $casts = [
@@ -39,7 +42,6 @@ class StoreEngagementForm extends Model
     ];
 
     protected $hidden = [
-        "created_at", 
         "updated_at", 
         "deleted_at"
     ];

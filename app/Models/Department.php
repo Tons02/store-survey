@@ -8,10 +8,11 @@ use App\Models\DepartmentLocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Essa\APIToolKit\Filters\Filterable;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class Department extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory, Filterable, softDeletes;
     protected $fillable = [
         'sync_id',
         'code',

@@ -6,10 +6,11 @@ use App\Filters\CompaniesFilter;
 use Essa\APIToolKit\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class Companies extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory, Filterable, softDeletes;
     protected $fillable = [
         'sync_id',
         'code',

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Requests\changePasswordRequest;
 use Illuminate\Validation\ValidationException;
 
 
@@ -34,37 +35,40 @@ class AuthController extends Controller
         
     }
 
-    //optional
     public function resetPassword(Request $request, $id){
         $user = User::where('id', $id)->first();
-        $username = $user->username;
-        $pass_encrypt = Crypt::encryptString($username);
+
+        if (!$user) {
+            return response()->json([
+                'status_code' => "404",
+                'message' => "User not found"
+                ], 404);
+        }
+
         $user->update([
-            'password' => $pass_encrypt
+            'password' => 1234
         ]);
         return response()->json(['message' => 'Password has been Reset!'], 200);
     }
 
-    //optional not working pa
-    public function changedPassword(Request $request){
-        $old_password = $request->old_password;
-        $new_password = $request->new_password;
-        $auth_id = auth('sanctum')->user()->id;
-        $user = User::where('id', $auth_id)->first();
-        $decryptedPassword = Crypt::decryptString($user->password);
-        if($old_password != $decryptedPassword){
-            return response()->json(['message' => 'Password not match!!'], 422);
+    public function changedPassword(changePasswordRequest $request){
+
+        $user = auth('sanctum')->user();
+        
+        if (! $user) {
+            return response()->json(['message' => 'User not authenticated'], 401);
         }
-        $encrypted_new_password = Crypt::encryptString($new_password);
+
         $user->update([
-            'password' => $encrypted_new_password
+            'password' => Hash::make($request->new_password),
         ]);
+    
         return response()->json(['message' => 'Password Successfully Changed!!'], 200);
     }
-
-    public function logout(Request $request){
-        auth('sanctum')->user()->currentAccessToken()->delete(); 
-        return response()->json(['message' => 'You are Successfully Logged Out!'], 200);
+    
+    public function Logout(Request $request){
+        auth('sanctum')->user()->currentAccessToken()->delete();//logout currentAccessToken
+        return response()->json(['message' => 'You are Successfully Logged Out!']);
     }
 
 

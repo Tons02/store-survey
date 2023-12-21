@@ -15,7 +15,6 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('location_id');
             $table->unsignedInteger('department_id');
-            $table->boolean('is_active'); 
             $table->timestamps();
         
             $table->foreign('location_id')->references('sync_id')->on('locations')->onDelete('cascade');
