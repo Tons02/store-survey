@@ -33,7 +33,7 @@ class UserController extends Controller
         
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $users);
         }
             UserResource::collection($users); 
             return GlobalFunction::response_function(Message::USER_DISPLAY, $users);
@@ -48,6 +48,7 @@ class UserController extends Controller
             "first_name" => $request["personal_info"]["first_name"],
             "middle_name" => $request["personal_info"]["middle_name"],
             "last_name" => $request["personal_info"]["last_name"],
+            "contact_details" => $request["personal_info"]["contact_details"],
             "sex" => $request["personal_info"]["sex"],
 
             "username" => $request["username"],

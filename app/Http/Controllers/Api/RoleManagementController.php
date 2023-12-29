@@ -33,7 +33,7 @@ class RoleManagementController extends Controller
         $is_empty = $RoleManagement->isEmpty();
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $RoleManagement);
         }
             RoleResource::collection($RoleManagement);
             return GlobalFunction::response_function(Message::ROLE_DISPLAY, $RoleManagement);
@@ -84,10 +84,20 @@ class RoleManagementController extends Controller
         if (!$role) {
             return GlobalFunction::not_found(Message::NOT_FOUND);
         }
+        
+        if ($role->deleted_at) {
+            $role->update([
+                'is_active' => 1
+            ]);
+            $role->restore();
+            return GlobalFunction::response_function(Message::RESTORE_STATUS);
+        }
+        
 
         if (User::where('role_id', $id)->exists()) {
             return GlobalFunction::invalid(Message::ROLE_ALREADY_USE);
         }
+
         if (!$role->deleted_at) {
             $role->update([
                 'is_active' => 0
@@ -95,12 +105,6 @@ class RoleManagementController extends Controller
             $role->delete();
             return GlobalFunction::response_function(Message::ARCHIVE_STATUS);
 
-        } else {
-            $role->update([
-                'is_active' => 1
-            ]);
-            $role->restore();
-            return GlobalFunction::response_function(Message::RESTORE_STATUS);
-        }
+        } 
     }
 }

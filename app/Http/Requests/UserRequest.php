@@ -29,16 +29,15 @@ class UserRequest extends FormRequest
                 "unique:users,id_no",
             ],
             "personal_info.first_name" => "required",
-            "personal_info.middle_name" => "required",
             "personal_info.last_name" => "required",
             "personal_info.sex" => "required",
             "username" => [
                 "required",
                 "unique:users,username",
             ],
-            "location_id" => "required|exists:locations,sync_id",
-            "department_id" => "required|exists:departments,sync_id",
-            "company_id" => "required|exists:companies,sync_id",
+            // "location_id" => "required|exists:locations,sync_id",
+            // "department_id" => "required|exists:departments,sync_id",
+            // "company_id" => "required|exists:companies,sync_id",
             "role_id" => "required|exists:role_management,id"
         ];
     

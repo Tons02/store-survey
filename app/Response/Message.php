@@ -41,6 +41,11 @@ class Message
     const OBJECTIVE_UPDATE = "Objective successfully updated.";
     const OBJECTIVE_DISPLAY = "Objective display successfully.";
 
+    //Strategy OPERATIONS
+    const STRATEGY_SAVE = "Strategy successfully save.";
+    const STRATEGY_UPDATE = "Strategy successfully updated.";
+    const STRATEGY_DISPLAY = "Strategy display successfully.";
+
     //GLOBAL MESSAGE
     const INVALID_STATUS = "Invalid Status";
     const INVALID_ID = "Invalid ID";

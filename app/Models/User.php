@@ -30,6 +30,7 @@ class User extends Authenticatable
         'first_name',
         'middle_name', 
         'last_name',
+        'contact_details',
         'sex',
         'username', 
         'password',
@@ -70,8 +71,9 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(RoleManagement::class, 'role_id');
+        return $this->belongsTo(RoleManagement::class, 'role_id')->withTrashed();
     }
+    
 
     public function department()
     {

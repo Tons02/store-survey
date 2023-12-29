@@ -12,6 +12,7 @@ class UserFilter extends QueryFilters
         "first_name",
         "middle_name",
         "last_name",
+        "contact_details",
         "sex",
         "username",
         "location_id",

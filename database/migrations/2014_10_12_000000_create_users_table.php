@@ -18,12 +18,13 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
+            $table->string('contact_details')->nullable();
             $table->enum("sex", ["male", "female"]);
             $table->string('username')->unique();
             $table->string('password');
-            $table->unsignedInteger('location_id');
-            $table->unsignedInteger('department_id');
-            $table->unsignedInteger('company_id');
+            $table->unsignedInteger('location_id')->nullable();
+            $table->unsignedInteger('department_id')->nullable();
+            $table->unsignedInteger('company_id')->nullable();
             $table->unsignedInteger("role_id")->index();
             $table->boolean('is_active')->default(true);
 

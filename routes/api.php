@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\StrategyController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\ObjectiveController;
 use App\Http\Controllers\Api\DepartmentController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Api\StoreEngagementFormsController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 
 
 
@@ -60,8 +62,13 @@ Route::resource("seforms", StoreEngagementFormsController::class);
 Route::post('seforms-followup/{id}',[StoreEngagementFormsController::class,'followup']);
 Route::put('seforms-archived/{id}',[StoreEngagementFormsController::class,'archived']);
 
-//Location Controller
+//Objective Controller
 Route::resource("objective", ObjectiveController::class);
+Route::put('objective-archived/{id}',[ObjectiveController::class,'archived']);
+
+//Strategy Controller
+Route::resource("strategy", StrategyController::class);
+Route::put('strategy-archived/{id}',[StrategyController::class,'archived']);
 
 });
 

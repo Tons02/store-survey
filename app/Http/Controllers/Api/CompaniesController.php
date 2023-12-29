@@ -31,7 +31,7 @@ class CompaniesController extends Controller
         $is_empty = $companies->isEmpty();
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $companies);
         }
         CompanyResource::collection($companies);
         return GlobalFunction::response_function(Message::COMPANY_DISPLAY, $companies);

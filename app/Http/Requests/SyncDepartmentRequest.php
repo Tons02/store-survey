@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ObjectiveRequest extends FormRequest
+class SyncDepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,12 @@ class ObjectiveRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "objective" => [
-                "required",
-                "unique:objectives,objective," . $this->route()->user,
-            ],
-            "location_id" => "required|exists:locations,sync_id",
+            "sync_id" => "required",
+            "code" => "required",
+            "name" => "required",
+            "company_sync_id" => "required|exists:companies,sync_id",
+            "is_active" => "required",
+            "deleted_at" => "nullable",
         ];
-    }
+    }    
 }

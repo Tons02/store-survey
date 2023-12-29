@@ -12,6 +12,7 @@ use Essa\APIToolKit\Api\ApiResponse;
 
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\DepartmentResource;
+use App\Http\Requests\SyncDepartmentRequest;
 
 class DepartmentController extends Controller
 {
@@ -31,7 +32,8 @@ class DepartmentController extends Controller
         $is_empty = $department->isEmpty();
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            // return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $department);
         }
         DepartmentResource::collection($department);
         return GlobalFunction::response_function(Message::DEPARTMENT_DISPLAY, $department);
@@ -52,7 +54,19 @@ class DepartmentController extends Controller
     
             // Extract the necessary data from the API response
             $departmentData = $data['result']['departments'];
-    
+            
+            // Validate each item in the data array
+            $validator = \Validator::make($departmentData, [
+                '*.company.id' => 'required|exists:companies,sync_id',
+            ]);
+
+            // Check if validation fails
+            if ($validator->fails()) {
+                return response()->json([
+                    'status_code' => 400,
+                    'message' => 'There is a added company id, Sync the company first',
+                ], 400);
+            }
             // Transform the external API data to match your local database structure
             $sync = collect($departmentData)->map(function ($item) {
                 $formattedDeletedAt = $item['deleted_at'] ? \Carbon\Carbon::parse($item['deleted_at'])->toDateTimeString() : null;
@@ -73,8 +87,9 @@ class DepartmentController extends Controller
     
             // Delete records from the Department model where sync_id is not in the obtained sync_id values
             Department::whereNotIn('sync_id', $syncIdsFromApi)->delete();
-    
+
             // Upsert the data into the local database
+
             $department = Department::upsert(
                 $sync, ['sync_id'], ['code', 'name', 'company_sync_id', 'is_active', 'deleted_at']
             );

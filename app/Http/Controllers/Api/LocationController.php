@@ -32,7 +32,8 @@ class LocationController extends Controller
         $is_empty = $location->isEmpty();
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            // return GlobalFunction::not_found(Message::NOT_FOUND);
+            return $this->responseSuccess('Location Display Inactive Successfully', $location);
         }
             LocationResource::collection($location);
             return $this->responseSuccess('Location Display Successfully', $location);
@@ -49,6 +50,19 @@ class LocationController extends Controller
         if ($response->successful()) {
             $data = $response->json()['result']['locations']; // Access the 'locations' array
     
+         // Validate each item in the data array
+         $validator = \Validator::make($data, [
+            '*.departments.*.id' => 'required|exists:departments,sync_id',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 400,
+                'message' => 'There is a added department, Sync the department first'
+            ], 400);
+        }
+
             foreach ($data as $locationData) {
                 $formattedDeletedAt = $locationData['deleted_at'] ? \Carbon\Carbon::parse($locationData['deleted_at'])->toDateTimeString() : null;
                 $location = Location::updateOrCreate(

@@ -44,9 +44,8 @@ class AuthController extends Controller
                 'message' => "User not found"
                 ], 404);
         }
-
         $user->update([
-            'password' => 1234
+            'password' => $user->username,
         ]);
         return response()->json(['message' => 'Password has been Reset!'], 200);
     }

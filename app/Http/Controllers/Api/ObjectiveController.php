@@ -57,4 +57,28 @@ class ObjectiveController extends Controller
         ]);
         return GlobalFunction::response_function(Message::OBJECTIVE_UPDATE, $update_objectives);
     }
+
+    public function archived(Request $request, $id)
+    {
+        $objective = Objective::withTrashed()->find($id);
+        // return $objective
+        if (!$objective) {
+            return GlobalFunction::not_found(Message::INVALID_ID);
+        }
+        
+        if (!$objective->deleted_at) {
+            $objective->update([
+                'is_active' => 0
+            ]);
+            $objective->delete();
+            return GlobalFunction::response_function(Message::ARCHIVE_STATUS);
+
+        } else {
+            $objective->update([
+                'is_active' => 1
+            ]);
+            $objective->restore();
+            return GlobalFunction::response_function(Message::RESTORE_STATUS);
+        }
+    }
 }
