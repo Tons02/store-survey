@@ -58,7 +58,6 @@ class UserController extends Controller
             "department_id" => $request["department_id"],
             "company_id" => $request["company_id"],
             "role_id" => $request["role_id"],
-            "is_active" => 1
 
         ]);
 

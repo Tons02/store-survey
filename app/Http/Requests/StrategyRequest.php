@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StrategyRequest extends FormRequest
@@ -22,12 +23,20 @@ class StrategyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "objective_id" => "required|exists:objectives,id",
+            "objective_id" => [
+                "required",
+                Rule::unique('strategies')->ignore($this->route('strategy'))->where(function ($query) {
+                    return $query->where('objective_id', $this->input('objective_id'))
+                                 ->where('strategy', $this->input('strategy'));
+                }),
+                "min:1",
+                "regex:/[^\s]/",
+                "exists:objectives,id"
+            ],
             "strategy" => [
                 "required",
-               
             ],
-           
         ];
+        
     }
 }

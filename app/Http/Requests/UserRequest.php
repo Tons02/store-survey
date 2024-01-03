@@ -22,36 +22,28 @@ class UserRequest extends FormRequest
     public function rules()
     {
         // Validation rules for "create" scenario
-        $createRules = [
-            "personal_info.id_prefix" => "required",
+            return [
+            "personal_info.id_prefix" => "sometimes:required|min:1|regex:/[^\s]/",
             "personal_info.id_no" => [
-                "required",
+                "sometimes:required",
                 "unique:users,id_no",
+                "min:1",
+                "regex:/[^\s]/"
             ],
-            "personal_info.first_name" => "required",
-            "personal_info.last_name" => "required",
-            "personal_info.sex" => "required",
+            "personal_info.first_name" => "sometimes:required|min:1|regex:/[^\s]/", 
+            "personal_info.last_name" => "sometimes:required|min:1|regex:/[^\s]/",
+            "personal_info.sex" => "sometimes:required|min:1|regex:/[^\s]/",
             "username" => [
-                "required",
-                "unique:users,username",
-            ],
-            // "location_id" => "required|exists:locations,sync_id",
-            // "department_id" => "required|exists:departments,sync_id",
-            // "company_id" => "required|exists:companies,sync_id",
-            "role_id" => "required|exists:role_management,id"
-        ];
-    
-        // Validation rules for "update" scenario
-        $updateRules = [
-            "username" => [
-                "required",
+                "sometimes:required",
                 "unique:users,username," . $this->route()->user,
+                "min:1",
+                "regex:/[^\s]/"
             ],
-            "role_id" => "required|exists:role_management,id"
+            // "location_id" => "sometimes|required|exists:locations,sync_id",
+            // "department_id" => "sometimes|required|exists:departments,sync_id",
+            // "company_id" => "sometimes|required|exists:companies,sync_id",
+            "role_id" => ["sometimes:required|exists:role_management,id|min:1|regex:/[^\s]/"]
         ];
-    
-        // Return the appropriate rules based on the scenario
-        return $this->isMethod('patch') ? $updateRules : $createRules;
     }
 
 }

@@ -15,10 +15,22 @@ class StrategyController extends Controller
     use ApiResponse;
     public function index(Request $request){
         $status = $request->query('status');
+        $objective_id = $request->query('objective');
+        $store_id = $request->query('store');
 
-        $users = Strategy::with('objective')
+        $users = Strategy::with(['objective.location'])
         ->when($status === "inactive", function ($query) {
             $query->onlyTrashed();
+        })
+        ->when($objective_id, function ($query) use ($objective_id) {
+            $query->whereHas('objective', function ($locationQuery) use ($objective_id) {
+                $locationQuery->where('id', $objective_id);
+            });
+        })
+        ->when($store_id, function ($query) use ($store_id) {
+            $query->whereHas('objective', function ($locationQuery) use ($store_id) {
+                $locationQuery->where('location_id', $store_id);
+            });
         })
         ->UseFilters()
         ->dynamicPaginate();
@@ -37,7 +49,7 @@ class StrategyController extends Controller
         $create_strategy = Strategy::create([
             "objective_id" => $request->objective_id,
             "strategy" => $request->strategy,
-        ]);
+        ]);  
         
         return GlobalFunction::response_function(Message::STRATEGY_SAVE, $create_strategy);
     }

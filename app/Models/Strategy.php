@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Location;
 use App\Models\Objective;
 use App\Filters\StrategyFilter;
 use Essa\APIToolKit\Filters\Filterable;
@@ -35,5 +36,10 @@ class Strategy extends Model
     public function objective()
     {
         return $this->belongsTo(Objective::class, 'objective_id');
+    }
+
+    public function location()
+    {
+        return $this->belongsToThrough(Location::class, Objective::class, 'id', 'id', 'objective_id');
     }
 }

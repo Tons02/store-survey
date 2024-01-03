@@ -16,7 +16,7 @@ class StrategyFilter extends QueryFilters
     protected array $allowedSorts = ["updated_at"];
 
     protected array $relationSearch = [
-        'objectives' => ['objective']
+        'objective' => ['objective']
     ];
 
     protected array $columnSearch = [

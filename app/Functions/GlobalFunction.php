@@ -12,7 +12,7 @@ class GlobalFunction
         return response()->json(
             [
                 "message" => $message,
-                // "result" => $result,
+                "result" => $result,
             ],
             Message::CREATED_STATUS
         );
@@ -33,7 +33,7 @@ class GlobalFunction
         return response()->json(
             [
                 "message" => $message,
-                // "result" => $result,
+                "result" => $result,
             ],
             Message::DATA_NOT_FOUND
         );

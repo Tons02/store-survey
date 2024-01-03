@@ -49,7 +49,7 @@ class Message
     //GLOBAL MESSAGE
     const INVALID_STATUS = "Invalid Status";
     const INVALID_ID = "Invalid ID";
-    const NOT_FOUND = "Data not Found";
+    const NOT_FOUND = "No Data Found";
     const INVALID_ACTION = "Invalid action.";
     const ARCHIVE_STATUS = "Successfully archived.";
     const RESTORE_STATUS = "Successfully restore.";

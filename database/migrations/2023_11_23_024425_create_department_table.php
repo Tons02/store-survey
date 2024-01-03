@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('code')->index();
             $table->string('name');
             $table->unsignedInteger("company_sync_id")->index();
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->foreign("company_sync_id")
             ->references("sync_id")
             ->on("companies")

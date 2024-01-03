@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ObjectiveRequest extends FormRequest
@@ -24,9 +25,15 @@ class ObjectiveRequest extends FormRequest
         return [
             "objective" => [
                 "required",
-                "unique:objectives,objective," . $this->route()->user,
+                Rule::unique('objectives')->where(function ($query) {
+                    return $query->where('objective', $this->input('objective'))
+                                 ->where('location_id', $this->input('location_id'));
+                }),
+                "min:1",
+                "regex:/[^\s]/"
             ],
             "location_id" => "required|exists:locations,sync_id",
         ];
+        
     }
 }

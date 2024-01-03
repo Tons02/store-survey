@@ -15,10 +15,16 @@ class ObjectiveController extends Controller
     use ApiResponse;
     public function index(Request $request){
         $status = $request->query('status');
+        $storename = $request->query('store');
 
         $users = Objective::with('location')
         ->when($status === "inactive", function ($query) {
             $query->onlyTrashed();
+        })
+        ->when($storename, function ($query) use ($storename) {
+            $query->whereHas('location', function ($locationQuery) use ($storename) {
+                $locationQuery->where('name', $storename);
+            });
         })
         ->UseFilters()
         ->dynamicPaginate();
@@ -54,7 +60,7 @@ class ObjectiveController extends Controller
             "objective" => $request->objective,
             "location_id" => $request->location_id,
             "is_active" => 1
-        ]);
+        ]); 
         return GlobalFunction::response_function(Message::OBJECTIVE_UPDATE, $update_objectives);
     }
 

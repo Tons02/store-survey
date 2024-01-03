@@ -17,6 +17,7 @@ class AuthController extends Controller
         
         $username=$request->username;
         $password=$request->password;
+        
         $login=User::where('username',$username)->get()->first();
 
         if (! $login || ! Hash::check($password, $login->password)) {
@@ -25,9 +26,10 @@ class AuthController extends Controller
             ])->status(401);
         }
         $token = $login->createToken('myapptoken')->plainTextToken;
-        $cookie =cookie('authcookie',$token);
+        $cookie = cookie('authcookie',$token);
 
         return response()->json([
+            'data' => $login ,
             'message' => 'Successfully Logged In',
             'token' => $token
             
@@ -44,6 +46,7 @@ class AuthController extends Controller
                 'message' => "User not found"
                 ], 404);
         }
+        
         $user->update([
             'password' => $user->username,
         ]);

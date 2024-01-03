@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('sync_id')->unique();
             $table->string('code')->index();
             $table->string('name');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

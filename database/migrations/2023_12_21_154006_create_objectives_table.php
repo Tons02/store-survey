@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('objective');
             $table->unsignedInteger('location_id');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         

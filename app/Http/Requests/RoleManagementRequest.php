@@ -30,6 +30,8 @@ class RoleManagementRequest extends FormRequest
                 $this->route()->role
                     ? "unique:role_management,name," . $this->route()->role
                     : "unique:role_management,name",
+                "min:1",
+                "regex:/[^\s]/"
             ],
             "access_permission" => ["array", "min:1"]
         ];
