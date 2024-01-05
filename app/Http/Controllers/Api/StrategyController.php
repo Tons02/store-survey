@@ -18,7 +18,7 @@ class StrategyController extends Controller
         $objective_id = $request->query('objective');
         $store_id = $request->query('store');
 
-        $users = Strategy::with(['objective.location'])
+        $strategy = Strategy::with(['objective.location'])
         ->when($status === "inactive", function ($query) {
             $query->onlyTrashed();
         })
@@ -32,17 +32,18 @@ class StrategyController extends Controller
                 $locationQuery->where('location_id', $store_id);
             });
         })
+        ->orderBy('created_at', 'desc')
         ->UseFilters()
         ->dynamicPaginate();
         
-        $is_empty = $users->isEmpty();
+        $is_empty = $strategy->isEmpty();
         
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $strategy);
         }
-            // UserResource::collection($users); 
-            return GlobalFunction::response_function(Message::STRATEGY_DISPLAY, $users);
+            // UserResource::collection($strategy); 
+            return GlobalFunction::response_function(Message::STRATEGY_DISPLAY, $strategy);
     }
 
     public function store(StrategyRequest $request){ 

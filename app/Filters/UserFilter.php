@@ -20,12 +20,13 @@ class UserFilter extends QueryFilters
         "company_id",
         "created_at", 
     ];
-    protected array $allowedSorts = ["updated_at"];
+    protected array $allowedSorts = ["updated_at","created_at"];
 
     protected array $relationSearch = [
         'location' => ['name'],
         'department' => ['name'],
-        'companies' => ['name']
+        'companies' => ['name'],
+        'role' => ['name'],
     ];
 
     protected array $columnSearch = [

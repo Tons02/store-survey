@@ -27,6 +27,7 @@ class RoleManagementController extends Controller
         when($status === "inactive", function ($query) {
             $query->onlyTrashed();
         })
+        ->orderBy('created_at', 'desc')
         ->useFilters()
         ->dynamicPaginate();
         
@@ -52,7 +53,7 @@ class RoleManagementController extends Controller
             // Reject the request, as it contains duplicate values
             return $this->responseUnprocessable('Access permission cannot contain duplicate values');
         }
-        $access_permissionConvertedToString = implode(", ", $access_permission);
+        $access_permissionConvertedToString = implode(",", $access_permission);
         $create_role = RoleManagement::create([
             "name" => $request->name,
             "access_permission" => $access_permissionConvertedToString,
@@ -77,7 +78,7 @@ class RoleManagementController extends Controller
             return $this->responseUnprocessable('Access permission cannot contain duplicate values');
         }
 
-        $access_permissionConvertedToString = implode(", ", $access_permission);
+        $access_permissionConvertedToString = implode(",", $access_permission);
 
         if (!$update_role) {
             return GlobalFunction::not_found(Message::NOT_FOUND);

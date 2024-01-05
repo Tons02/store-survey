@@ -26,6 +26,7 @@ class LocationController extends Controller
         ->when($status === "inactive", function ($query) {
             $query->onlyTrashed();
         })
+        ->orderBy('created_at', 'desc')
         ->UseFilters()
         ->dynamicPaginate();
         

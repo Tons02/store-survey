@@ -26,6 +26,7 @@ class ObjectiveController extends Controller
                 $locationQuery->where('name', $storename);
             });
         })
+        ->orderBy('created_at', 'desc')
         ->UseFilters()
         ->dynamicPaginate();
         
@@ -33,7 +34,7 @@ class ObjectiveController extends Controller
         
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $users);
         }
             // UserResource::collection($users); 
             return GlobalFunction::response_function(Message::OBJECTIVE_DISPLAY, $users);

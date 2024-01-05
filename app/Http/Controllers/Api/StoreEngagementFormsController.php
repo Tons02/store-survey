@@ -28,13 +28,14 @@ class StoreEngagementFormsController extends Controller
         when($status === "inactive", function ($query) {
             $query->onlyTrashed();
         })
+        ->orderBy('created_at', 'desc')
         ->useFilters()
         ->dynamicPaginate();
         
         $is_empty = $StoreEngagementForm->isEmpty();
 
         if ($is_empty) {
-            return GlobalFunction::not_found(Message::NOT_FOUND);
+            return GlobalFunction::response_function(Message::NOT_FOUND, $StoreEngagementForm);
         }
             StoreEngagementFormResource::collection($StoreEngagementForm);
             return GlobalFunction::response_function(Message::STORE_DISPLAY, $StoreEngagementForm);

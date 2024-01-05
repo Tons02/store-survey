@@ -29,7 +29,6 @@ use App\Http\Controllers\Api\StoreEngagementFormsController;
 
 
 
-Route::group(["middleware" => ["auth:sanctum"]], function () {
 
 //Role Controller
 Route::resource("role", RoleManagementController::class);
@@ -39,6 +38,8 @@ Route::put('role-archived/{id}',[RoleManagementController::class,'archived']);
 Route::resource("users", UserController::class);
 Route::put('user-archived/{id}',[UserController::class,'archived']);
 
+
+Route::group(["middleware" => ["auth:sanctum"]], function () {
 //Auth Controller
 Route::patch('changepassword',[AuthController::class,'changedPassword']);
 Route::patch('resetpassword/{id}',[AuthController::class,'resetPassword']);
